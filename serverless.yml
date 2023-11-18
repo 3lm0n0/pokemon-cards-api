@@ -1,0 +1,38 @@
+# serverless.yml	
+	
+service: cards
+
+frameworkVersion: '>=1.28.0'
+
+provider:
+  apiName: cards-api-prod
+  name: aws
+  runtime: go1.x
+  region: us-east-1
+  stage: ${opt:stage}
+ 
+package:
+ exclude:
+   - ./**
+ include:
+   - ./bin/**
+ 
+functions:
+  api:
+    handler: bin/cards
+    events:
+      - http:
+          path: /app/v1/ping
+          method: get
+      - http:
+          path: /app/v1/cards
+          method: get
+      - http:
+          path: /app/v1/cards
+          method: post
+      - http:
+          path: /app/v1/cards
+          method: patch
+      - http:
+          path: /app/v1/cards
+          method: delete     

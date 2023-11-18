@@ -1,0 +1,320 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Swagger Pokemon Cards - OpenAPI 3.0",
+    "description": "This is a Pokemon Cards API based on the OpenAPI 3.0 specification.\n\nSome useful links:\n- [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "pedro.jose.bidoggia@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.11"
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  },
+  "servers": [
+    {
+      "url": "https://petstore3.swagger.io/api/v3"
+    }
+  ],
+  "tags": [
+    {
+      "name": "pokemon",
+      "description": "Pokemon cards API",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    }
+  ],
+  "paths": {
+    "/api/v1/ping": {
+      "get": {
+        "tags": [
+          "healthcheck"
+        ],
+        "summary": "Health check",
+        "description": "Returns pong to check health",
+        "operationId": "healthCheck",
+        "parameters": [
+          {
+            "name": "ping",
+            "in": "query",
+            "description": "ID of Pokemon to return",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "string",
+                  "example": "pong"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards": {
+      "patch": {
+        "tags": [
+          "pokemon"
+        ],
+        "summary": "Update an existing pokemon",
+        "description": "Update an existing pokemon by Id",
+        "operationId": "updatePokemon",
+        "requestBody": {
+          "description": "Update an existent pokemon",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pokemon"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pokemon"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pokemon not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "pokemon"
+        ],
+        "summary": "Add a new pokemon",
+        "description": "Add a new pokemon",
+        "operationId": "addPokemon",
+        "requestBody": {
+          "description": "Create a new pokemon",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pokemon"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pokemon"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/v1/cards?id={uuid}": {
+      "get": {
+        "tags": [
+          "pokemon"
+        ],
+        "summary": "Find Pokemon by ID",
+        "description": "Returns a single Pokemon",
+        "operationId": "getPokemonById",
+        "parameters": [
+          {
+            "name": "PokemonId",
+            "in": "query",
+            "description": "ID of Pokemon to return",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pokemon"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pokemon not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "pokemon"
+        ],
+        "summary": "Delete pokemon by ID",
+        "description": "For valid response try integer IDs with value < 1000. Anything above 1000 or nonintegers will generate API errors",
+        "operationId": "deletePokemon",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "query",
+            "description": "ID of the pokemon that needs to be deleted",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pokemon not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pokemon": {
+        "required": [
+          "Name",
+          "Hp",
+          "FirstEdition",
+          "Expansion",
+          "Kind",
+          "Rarity",
+          "Price",
+          "Strangeness",
+          "Image"
+        ],
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string",
+            "format": "string",
+            "example": "0113d163-7f45-414d-961e-bb01db2e9eea",
+            "description": "uuid"
+          },
+          "Name": {
+            "type": "string",
+            "example": "pokemon_1"
+          },
+          "Hp": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10,
+            "description": "Representa la salud de los Pokemons y siempre es un múltiplo de 10"
+          },
+          "FirstEdition": {
+            "type": "boolean",
+            "format": "boolean",
+            "example": true
+          },
+          "Expansion": {
+            "type": "string",
+            "enum": [
+              "Base Set",
+              "Jungle",
+              "Fossil",
+              "Base Set 2"
+            ],
+            "example": "Jungle"
+          },
+          "Kind": {
+            "type": "string",
+            "description": "pet status in the store",
+            "enum": [
+              "fire",
+              "water",
+              "wind",
+              "earth"
+            ],
+            "example": "fire"
+          },
+          "Strangeness": {
+            "type": "string",
+            "description": "pet status in the store",
+            "enum": [
+              "rare",
+              "common",
+              "not common"
+            ],
+            "example": "rare"
+          },
+          "Price": {
+            "type": "integer",
+            "example": 12.3,
+            "format": "decimal",
+            "description": "pokemon card price"
+          },
+          "Image": {
+            "type": "string",
+            "example": "path/image.png",
+            "description": "path where image is stored"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "format": "string"
+          },
+          "message": {
+            "type": "string",
+            "format": "string"
+          },
+          "result": {
+            "type": "array",
+            "format": "string"
+          },
+          "pagination": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
